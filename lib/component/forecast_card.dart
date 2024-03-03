@@ -2,8 +2,15 @@
 import 'package:flutter/material.dart';
 
 class ForeCastCard extends StatelessWidget {
+  final String time;
+  final Widget theIcon;
+  final String exactTemp;
+
   const ForeCastCard({
     super.key,
+    required this.time,
+    required this.theIcon,
+    required this.exactTemp,
   });
 
   @override
@@ -16,25 +23,22 @@ class ForeCastCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         padding: const EdgeInsets.all(8.0),
-        child: const Column(
+        child: Column(
           children: [
             Text(
-              "3:00",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              time,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
-            Icon(
-              Icons.cloud,
-              size: 32,
-            ),
-            SizedBox(
+            theIcon,
+            const SizedBox(
               height: 8,
             ),
             Text(
-              "301.17",
-              style: TextStyle(
+              exactTemp,
+              style: const TextStyle(
                 fontSize: 14,
               ),
             )

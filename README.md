@@ -22,3 +22,11 @@ Resources that I have found useful -[video: Video tutorial for project](https://
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Data Fetching
+
+1. Visit the -[flutter packaged](pub.dev) website and look for http.
+2. Add the version you copied to the dependencies in pubspec.yaml file
+3. Got to the main weather file and create a function to fetch data
+4. Make sure to have the latest version of dart installed
+5. Create an account on open weather website and wait for them to give you a key via email
