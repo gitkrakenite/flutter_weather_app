@@ -27,7 +27,12 @@ class ForeCastCard extends StatelessWidget {
           children: [
             Text(
               time,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1, //can only be one line
+              overflow: TextOverflow.ellipsis, //tells user to expect more text
             ),
             const SizedBox(
               height: 8,

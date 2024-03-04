@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AdditionalInfoCard extends StatelessWidget {
   final String title;
   final Widget theIcon;
-  final double numberData;
+  final String numberData;
 
   const AdditionalInfoCard({
     super.key,
@@ -24,7 +24,7 @@ class AdditionalInfoCard extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          "$numberData",
+          numberData,
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

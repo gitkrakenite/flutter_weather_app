@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/component/additional_info_card.dart';
 import 'package:weather_app/component/forecast_card.dart';
 import 'package:http/http.dart' as http;
@@ -56,7 +57,7 @@ class _MyWeatherAppState extends State<MyWeatherApp> {
         actions: [
           IconButton(
             onPressed: () {
-              print("refresh");
+              setState(() {}); //refresh the UI
             },
             icon: const Icon(Icons.refresh),
           )
@@ -65,7 +66,7 @@ class _MyWeatherAppState extends State<MyWeatherApp> {
 
       //futurebuilder is handy eh fetchinf data
       body: FutureBuilder(
-        future: getCurrentWeather(),
+        future: getCurrentWeather(), //remember we returned data
         builder: (context, snapshot) {
           // handle loading
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -86,8 +87,21 @@ class _MyWeatherAppState extends State<MyWeatherApp> {
           }
 
           //handle data we get from the server
+
           final data = snapshot.data!; //can be nullable
-          final currentTemp = data['list'][0]['main']['temp'];
+
+          //retrieving data from data and storing in variables
+          final currentWeatherData = data['list'][0];
+          final currentTemp = currentWeatherData['main']['temp']; //the big card
+          final currentWeather =
+              currentWeatherData['weather'][0]['main']; //cloudy
+
+          //additional info variable
+          final currentPressure = currentWeatherData['main']['pressure'];
+          final currentWindSpeed = currentWeatherData['wind']['speed'];
+          final currentHumidity = currentWeatherData['main']['humidity'];
+
+          //weather forecast variables
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -121,16 +135,22 @@ class _MyWeatherAppState extends State<MyWeatherApp> {
                                   const SizedBox(
                                     height: 16,
                                   ),
-                                  const Icon(
-                                    Icons.cloud,
+
+                                  //implementing a heavy ternary operator
+                                  Icon(
+                                    currentWeather == "Clouds"
+                                        ? Icons.cloud
+                                        : currentWeather == "Clear"
+                                            ? Icons.sunny
+                                            : Icons.thunderstorm,
                                     size: 70,
                                   ),
                                   const SizedBox(
                                     height: 16,
                                   ),
-                                  const Text(
-                                    "Rain",
-                                    style: TextStyle(fontSize: 20),
+                                  Text(
+                                    currentWeather.toString(),
+                                    style: const TextStyle(fontSize: 20),
                                   ),
                                 ],
                               ),
@@ -151,51 +171,31 @@ class _MyWeatherAppState extends State<MyWeatherApp> {
                   const SizedBox(
                     height: 16,
                   ),
-                  const SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ForeCastCard(
-                          exactTemp: "301.7",
+
+                  //it is very bad practice to load 30 widgets at the same time especially when fetching data we need to do lazy loading hence the listview.builder
+
+                  //listview  has a tendecy to take entire screen. we need to fix it
+                  SizedBox(
+                    height: 120,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        final hourlyForeCast = data['list'][index + 1];
+                        final time = DateTime.parse(hourlyForeCast['dt_txt']);
+                        return ForeCastCard(
+                          exactTemp: hourlyForeCast['main']['temp'].toString(),
                           theIcon: Icon(
-                            Icons.sunny,
+                            hourlyForeCast['weather'][0]['main'] == 'Clouds'
+                                ? Icons.cloud
+                                : hourlyForeCast['weather'][0]['main'] == 'Rain'
+                                    ? Icons.thunderstorm
+                                    : Icons.sunny,
                             size: 32,
                           ),
-                          time: "3:00",
-                        ),
-                        ForeCastCard(
-                          exactTemp: "200.7",
-                          theIcon: Icon(
-                            Icons.thunderstorm,
-                            size: 32,
-                          ),
-                          time: "4:00",
-                        ),
-                        ForeCastCard(
-                          exactTemp: "160.7",
-                          theIcon: Icon(
-                            Icons.cloud,
-                            size: 32,
-                          ),
-                          time: "4:30",
-                        ),
-                        ForeCastCard(
-                          exactTemp: "701.7",
-                          theIcon: Icon(
-                            Icons.cloud,
-                            size: 32,
-                          ),
-                          time: "6:00",
-                        ),
-                        ForeCastCard(
-                          exactTemp: "401.7",
-                          theIcon: Icon(
-                            Icons.cloud,
-                            size: 32,
-                          ),
-                          time: "8:00",
-                        ),
-                      ],
+                          time: DateFormat.j().format(time), //readable time
+                        );
+                      },
                     ),
                   ),
 
@@ -212,32 +212,33 @@ class _MyWeatherAppState extends State<MyWeatherApp> {
                     height: 16,
                   ),
 
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       AdditionalInfoCard(
                         title: "Humidity",
-                        theIcon: Icon(
+                        theIcon: const Icon(
                           Icons.water_drop,
                           size: 30,
                         ),
-                        numberData: 94,
+                        numberData: currentHumidity.toString(),
                       ),
                       AdditionalInfoCard(
                         title: "Wind Speed",
-                        theIcon: Icon(
+                        theIcon: const Icon(
                           Icons.air,
                           size: 30,
                         ),
-                        numberData: 7.67,
+                        numberData: currentWindSpeed.toString(),
                       ),
                       AdditionalInfoCard(
                         title: "Pressure",
-                        theIcon: Icon(
+                        theIcon: const Icon(
                           Icons.beach_access,
                           size: 30,
                         ),
-                        numberData: 1006,
+                        numberData:
+                            currentPressure.toString(), //convert to string
                       ),
                     ],
                   )

@@ -30,3 +30,5 @@ samples, guidance on mobile development, and a full API reference.
 3. Got to the main weather file and create a function to fetch data
 4. Make sure to have the latest version of dart installed
 5. Create an account on open weather website and wait for them to give you a key via email
+6. use Listview.builder to build your UI on the weather forecast it allows lazy loading and hence better performance
+7. In order to correctly handle the date to a readable format. we are using a package from pub.dev calles [intl](https://pub.dev/packages/intl)
